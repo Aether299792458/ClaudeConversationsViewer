@@ -1,4 +1,4 @@
-﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿<!DOCTYPE html>
+﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
 <meta charset="UTF-8">
@@ -521,7 +521,7 @@ function showStats(el, messages) {
     else { aiMsgs++; aiText += text + '\n'; }
   });
   const totalMsgs = messages.length;
-  const emojis = (allText.match(/[\p{Emoji_Presentation}\u200d\uFE0F]/gu) || []).filter(e => e.trim()).length;
+  const emojis = (allText.match(/[\p{Emoji_Presentation}\u200d\uFE0F]/gu) || []).filter(e => e !== '\uFE0F' && e !== '\u200d' && e.trim()).length;
   const cnChars = (allText.match(/[\u4e00-\u9fff\u3400-\u4dbf]/g) || []).length;
   const enWords = (allText.match(/[a-zA-Z]+/g) || []).length;
   const lines = allText.split(/\n/).length;
@@ -974,8 +974,8 @@ function computeAndRenderStats(convs, extractor, type) {
       if (isUser) allUserText += text + '\n'; else allAIText += text + '\n';
       if (text.length > longestMsg) { longestMsg = text.length; longestConvName = conv.name || conv.title || ''; }
 
-      // Emojis — only actual emoji, not digits/punctuation
-      const emojis = (text.match(/[\p{Emoji_Presentation}\u200d\uFE0F]/gu) || []).filter(e => e.trim());
+      // Emojis — exclude variation selectors, ZWJ, whitespace
+      const emojis = (text.match(/[\p{Emoji_Presentation}\u200d\uFE0F]/gu) || []).filter(e => e !== '\uFE0F' && e !== '\u200d' && e.trim());
       totalEmojis += emojis.length;
       emojis.forEach(e => emojiFreq[e] = (emojiFreq[e] || 0) + 1);
 
